@@ -1,0 +1,18 @@
+{
+  "name": "pixxi",
+  "version": "0.0.0",
+  "description": "Experiments with pixi.js",
+  "main": "Gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "pixi.js"
+  ],
+  "author": "Arlando Battle",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.8.1",
+    "gulp-livereload": "^2.1.0"
+  }
+}

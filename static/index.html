@@ -1,0 +1,162 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>pixi.js example 1</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+        }
+    </style>
+    <script src="bower_components/pixi/bin/pixi.js"></script>
+
+</head>
+<body>
+<script>
+
+    // create an new instance of a pixi stage
+    var stage = new PIXI.Stage(0x66FF99);
+
+    // create a renderer instance
+    var renderer = new PIXI.WebGLRenderer(600, 600);//autoDetectRenderer(400, 300);
+
+    // add the renderer view element to the DOM
+    document.body.appendChild(renderer.view);
+
+    requestAnimFrame( animate );
+
+//    // create a texture from an image path
+//    var texture = PIXI.Texture.fromImage("bunny.png");
+//    // create a new Sprite using the texture
+//    var bunny = new PIXI.Sprite(texture);
+//
+//    // center the sprites anchor point
+//    bunny.anchor.x = 0.5;
+//    bunny.anchor.y = 0.5;
+//
+//    // move the sprite t the center of the screen
+//    bunny.position.x = 200;
+//    bunny.position.y = 150;
+//
+//    stage.addChild(bunny);
+
+    // draw a circle
+    var graphics = new PIXI.Graphics();
+    graphics.lineStyle(0);
+    graphics.beginFill(0xFFFFFF, 0.5);
+    graphics.drawCircle(470, 200, 100);
+
+    stage.addChild(graphics);
+
+    function animate() {
+
+        requestAnimFrame( animate );
+
+        // just for fun, lets rotate mr rabbit a little
+        //bunny.rotation += 0.1;
+
+        // render the stage
+        renderer.render(stage);
+    }
+
+    function Vector(x, y) {
+        this.x = x || 0;
+        this.y = y || 0;
+    }
+    Vector.prototype.add = function (x, y) {
+        this.x += x;
+        this.y += y;
+        return this;
+    };
+
+
+
+
+
+
+    var Node = {
+        location: new Vector(),
+        id: 0,
+        connections: [],
+
+        setLocation: function () {
+            if (arguments.length === 1) {
+                var arg0 = arguments[0];
+                if (arg0 instanceof Vector) {
+                    this.location = arg0;
+                } else {
+                    throw new Error('Do not know what to do with a non vector.');
+                }
+            } else if (arguments.length === 2) {
+                //assume x,y
+                this.location = new Vector(arguments[0], arguments[1]);
+            }
+        },
+
+        addConnection: function (nodeToAdd) {
+            var canAdd;
+
+            //Do not add nodes already have been added
+            canAdd = this.connections.every(function (node) {
+                return node.id !== nodeToAdd.id;
+            });
+
+            //Do not add self
+            canAdd = this.id !== nodeToAdd.id;
+
+            if (canAdd) {
+                this.connections.push(nodeToAdd);
+            }
+        },
+
+        removeConnection: function (nodeToRemove) {
+            var canRemove = -1;
+
+            this.connections.forEach(function (node, value, index) {
+                if (node.id === nodeToRemove.id) {
+                    canRemove = index;
+                }
+            });
+
+            if (canRemove > -1) {
+                this.connections.splice(canRemove, 1);
+            }
+        }
+    };
+
+
+    var AdjacencyList = {
+        list: [],
+        currNodeId: 0,
+
+        addNode: function (node) {
+            node.id = this.currNodeId;
+            this.list.push(node);
+            this.currNodeId++;
+        },
+
+        addEdge: function (node1, node2) {
+            node1.addConnection(node2);
+            node2.addConnection(node1);
+        },
+
+        removeEdge: function (node1, node2) {
+            node1.removeConnection(node2);
+            node2.removeConnection(node1);
+        },
+
+        isEmpty: function () {
+            return this.list.length === 0;
+        },
+
+        //TODO: areLinked
+        areLinked: false
+    };
+
+
+</script>
+
+</body>
+</html>
