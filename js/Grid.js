@@ -56,6 +56,12 @@ Grid.prototype = {
                 numberOfNodes++;
             }
         }
+    },
+
+    draw: function (graphics) {
+        for(var i in this.nodes) {
+            graphics.drawCircle(this.nodes[i].location.x, this.nodes[i].location.y, 50);
+        }
     }
 };
 

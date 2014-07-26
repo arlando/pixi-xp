@@ -2,6 +2,8 @@
  * Created by arlando on 7/26/14.
  */
 'use strict';
+var async = require('../bower_components/async/lib/async');
+var _ = require('../bower_components/underscore/underscore');
 
 function AdjacencyList(graphics, grid) {
         if (graphics === void 0) throw new Error('Must have a graphics!');
@@ -12,6 +14,7 @@ function AdjacencyList(graphics, grid) {
 AdjacencyList.prototype = {
     setup: function (graphics, grid) {
         this.list = {};
+        this.nodeList = [];
         this.currNodeId = 0;
         this.grid = grid;
         this.graphics = graphics;
@@ -26,6 +29,7 @@ AdjacencyList.prototype = {
     addNode: function (i, node) {
         node.setId(this.currNodeId);
         this.list[node.getId()] = node;
+        this.nodeList.push(node);
         this.grid.addObjectToAGridNode(i, node);
         this.currNodeId++;
     },
@@ -45,32 +49,63 @@ AdjacencyList.prototype = {
     },
 
     draw: function () {
-        this.drawList = _.clone(this.list); //Do not want to mutate actual list.
-        _.forEach(this.drawList, this.removeNodeFromOtherLists, this);
-        _.forEach(this.drawList, this._drawEdge, this);
-        _.forEach(this.drawList, this._drawNode, this);
+        if (this.graphics === void 0) {
+            throw new Error("Cannot draw without graphics.");
+        }
+
+        var self = this;
+        var drawList = _.clone(this.nodeList); //Do not want to mutate actual list.
+        _.forEach(drawList, this._removeNodeFromOtherLists, this);
+        async.series({
+//            removeNodesFromOtherLists: function () {
+//
+//                async.each(self.drawList, self._removeNodeFromOtherLists, function (err) {
+//                    if (err) throw err;
+//                });
+//            },
+            drawEdges: function (callback) {
+                async.each(drawList, self._drawEdge.bind(self), function (err) {
+                    if (err) throw err;
+                    //console.log('z');
+                });
+
+                callback(null, drawList);
+            },
+            drawNodes: function (callback) {
+                async.each(drawList, self._drawNode.bind(self), function (err) {
+                    if (err) throw err;
+                });
+                callback(null, drawList)
+            }
+        },
+        function (err) {
+            if (err) throw err;
+        });
+        //_.forEach(this.drawList, this.removeNodeFromOtherLists, this);
+        //_.forEach(this.drawList, this._drawEdge, this);
+        //_.forEach(this.drawList, this._drawNode, this);
     },
 
-    removeNodeFromOtherLists: function (node) {
+    _removeNodeFromOtherLists: function (node, callback) {
         _.each(node.getConnections(), function (connectedNode) {
             //remove the current node from the connect node's list of connections
             connectedNode.removeConnection(node);
-        });
+        }, this);
+        //callback();
     },
 
     //TODO BETTER PRIVATE FUNCTIONS
-    _drawNode: function (node) {
-        if (this.graphics == void 0) {
-            throw new Error("Cannot draw without graphics.");
-        }
+    _drawNode: function (node, callback) {
         node.draw(this.graphics);
+        callback();
     },
 
     //TODO BETTER PRIVATE FUNCTIONS
-    _drawEdge: function (node) {
+    _drawEdge: function (node, callback) {
         _.each(node.getConnections(), function(connectedNode) {
             this.drawConnection(node, connectedNode);
         }, this);
+        callback();
     },
 
     /**
@@ -94,7 +129,7 @@ AdjacencyList.prototype = {
      * Draws the underlying grid structure
      */
     drawGrid: function () {
-
+        this.grid.draw(this.graphics);
     }
 
 };
