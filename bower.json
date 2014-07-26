@@ -1,0 +1,23 @@
+{
+  "name": "pixi xp",
+  "version": "0.0.0",
+  "authors": [
+    "Arlando arlando@gmail.com"
+  ],
+  "description": "Experiemnts with Pixi.js Library",
+  "main": "/js/main.js",
+  "license": "MIT",
+  "homepage": "http://ngineer.in",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "pixi": "~1.6.1",
+    "underscore": "~1.6.0"
+  }
+}
