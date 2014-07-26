@@ -2,6 +2,7 @@
 var gulp = require('gulp');
 var express = require('express');
 var livereload = require('gulp-livereload');
+var browserify = require('gulp-browserify');
 var lrserver;
 
 var EXPRESS_PORT = 4000;
@@ -14,10 +15,20 @@ function startExpress() {
     app.listen(EXPRESS_PORT);
 }
 
-gulp.task('default', function () {
+gulp.task('default', ['scripts'], function() {
     startExpress();
     lrserver = livereload();
-    gulp.watch('static/**').on('change', function (file) {
+    gulp.watch('js/**', ['scripts']);
+    gulp.watch('js/**').on('change', function (file) {
         lrserver.changed(file.path);
     });
+});
+
+gulp.task('scripts', function() {
+    gulp.src('./js/main.js')
+        .pipe(browserify({
+            insertGlobals: true,
+            debug: !process.env.NODE_ENV
+        }))
+        .pipe(gulp.dest('./static/build/'));
 });
