@@ -4,7 +4,7 @@ var express = require('express');
 var livereload = require('gulp-livereload');
 var browserify = require('gulp-browserify');
 var embedlr = require('gulp-embedlr');
-var lrserver;
+var lrserver = livereload();
 var debug = process.env.NODE_ENV || 'development';
 
 
@@ -35,11 +35,12 @@ function startExpress() {
 gulp.task('default', ['scripts'], function() {
     embedLrSnippet();
     startExpress();
-    lrserver = livereload();
+
     gulp.watch('js/**', ['scripts']);
-    gulp.watch('js/**').on('change', function (file) {
+    gulp.watch('./static/build/**').on('change', function (file) {
         lrserver.changed(file.path);
     });
+
 });
 
 gulp.task('scripts', function() {
