@@ -2,18 +2,21 @@
  * Created by arlando on 7/26/14.
  */
 'use strict';
-
+var GridNode = require('./GridNode');
 var Vector = require('./Vector');
 var SETTINGS = require('./SETTINGS').GRID;
+var async = require('../bower_components/async/lib/async');
 
 function Grid() {
     this.setup();
 }
 
 Grid.prototype = {
-    setup: function(vector) {
+    setup: function(vector, gridNode) {
         this._Vector = vector || Vector; //dependency injection
+        this._GridNode = gridNode || GridNode; //dependency injection
         this.nodes = {};
+        this.nodesArray = [];
         this.initializeNodes();
         this.initializePositions();
     },
@@ -28,9 +31,10 @@ Grid.prototype = {
 
     addObjectToAGridNode: function(i, obj) {
         var node = this.nodes[i];
-        node.object = obj;
+        node.setObject(obj);
+
         if (obj.setLocation) {
-            obj.setLocation(node.location);
+            obj.setLocation(node.getLocation());
         }
     },
 
@@ -41,7 +45,9 @@ Grid.prototype = {
     initializeNodes: function() {
         var numberOfNodes = 0;
         while (numberOfNodes < SETTINGS.MAX_NODES_X * SETTINGS.MAX_NODES_Y) {
-            this.nodes[numberOfNodes] = {};
+            var gridNode = new this._GridNode();
+            this.nodes[numberOfNodes] = gridNode;
+            this.nodesArray.push(gridNode);
             numberOfNodes++;
         }
     },
@@ -52,16 +58,21 @@ Grid.prototype = {
         for (x; x < SETTINGS.MAX_NODES_X; x++) {
             var y = 0;
             for (y; y < SETTINGS.MAX_NODES_Y; y++) {
-                this.nodes[numberOfNodes].location = Object.freeze(new this._Vector(x * SETTINGS.STEP_X, y * SETTINGS.STEP_Y));
+                this.nodes[numberOfNodes].setLocation(Object.freeze(new this._Vector(x * SETTINGS.STEP_X, y * SETTINGS.STEP_Y)));
                 numberOfNodes++;
             }
         }
     },
 
     draw: function (graphics) {
-        for(var i in this.nodes) {
-            graphics.drawCircle(this.nodes[i].location.x, this.nodes[i].location.y, 50);
-        }
+        if (graphics === void 0) throw new Error('Can not draw without graphics');
+        var self = this;
+        async.each(this.nodesArray, function (node, callback) {
+            graphics.drawCircle(node.getLocation().x, node.getLocation().y, 1);
+            callback(null);
+        }, function (err) {
+            if (err) throw err;
+        });
     }
 };
 

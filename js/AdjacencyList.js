@@ -5,6 +5,7 @@
 var async = require('../bower_components/async/lib/async');
 var _ = require('../bower_components/underscore/underscore');
 
+//TODO write code to inject custom draw functions
 function AdjacencyList(graphics, grid) {
         if (graphics === void 0) throw new Error('Must have a graphics!');
         if (grid === void 0) throw new Error('Must have a grid!');
@@ -49,24 +50,19 @@ AdjacencyList.prototype = {
     },
 
     draw: function () {
+
         if (this.graphics === void 0) {
             throw new Error("Cannot draw without graphics.");
         }
 
         var self = this;
         var drawList = _.clone(this.nodeList); //Do not want to mutate actual list.
+
         _.forEach(drawList, this._removeNodeFromOtherLists, this);
         async.series({
-//            removeNodesFromOtherLists: function () {
-//
-//                async.each(self.drawList, self._removeNodeFromOtherLists, function (err) {
-//                    if (err) throw err;
-//                });
-//            },
             drawEdges: function (callback) {
                 async.each(drawList, self._drawEdge.bind(self), function (err) {
                     if (err) throw err;
-                    //console.log('z');
                 });
 
                 callback(null, drawList);
@@ -81,17 +77,15 @@ AdjacencyList.prototype = {
         function (err) {
             if (err) throw err;
         });
-        //_.forEach(this.drawList, this.removeNodeFromOtherLists, this);
-        //_.forEach(this.drawList, this._drawEdge, this);
-        //_.forEach(this.drawList, this._drawNode, this);
+
+        this.grid.draw(this.graphics);
     },
 
-    _removeNodeFromOtherLists: function (node, callback) {
+    _removeNodeFromOtherLists: function (node) {
         _.each(node.getConnections(), function (connectedNode) {
             //remove the current node from the connect node's list of connections
             connectedNode.removeConnection(node);
         }, this);
-        //callback();
     },
 
     //TODO BETTER PRIVATE FUNCTIONS
