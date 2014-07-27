@@ -5,7 +5,9 @@
 var GridNode = require('./GridNode');
 var Vector = require('./Vector');
 var SETTINGS = require('./SETTINGS').GRID;
-var async = require('../bower_components/async/lib/async');
+var async = require('async');
+var PIXI = require('pixi');
+var stage = require('./stage');
 
 function Grid() {
     this.setup();
@@ -66,9 +68,14 @@ Grid.prototype = {
 
     draw: function (graphics) {
         if (graphics === void 0) throw new Error('Can not draw without graphics');
-        var self = this;
+
         async.each(this.nodesArray, function (node, callback) {
-            graphics.drawCircle(node.getLocation().x, node.getLocation().y, 1);
+            var txt = new PIXI.Text('x');
+            txt.anchor.x = 0.5;
+            txt.anchor.y = 0.5;
+            txt.position.x = node.getLocation().x;
+            txt.position.y = node.getLocation().y;
+            stage.addChild(txt);
             callback(null);
         }, function (err) {
             if (err) throw err;

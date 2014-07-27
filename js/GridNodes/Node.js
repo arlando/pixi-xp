@@ -62,8 +62,14 @@ Node.prototype = {
         }
     },
 
+    hasConnections: function () {
+        return Object.keys(this.connections).length > 0;
+    },
+
     draw: function (graphics) {
         var nodeLocation = this.getLocation();
+        graphics.lineStyle(1, 0xFF00FF, 1);
+        //console.log('x', nodeLocation.x, 'y', nodeLocation.y);
         graphics.drawCircle(nodeLocation.x, nodeLocation.y, SETTINGS.RADIUS);
     }
 };

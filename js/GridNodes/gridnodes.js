@@ -5,15 +5,15 @@
 var Grid = require('./Grid');
 var Node = require('./Node');
 var AdjacencyList = require('./AdjacencyList');
-var PIXI = require('../bower_components/pixi/bin/pixi.js');
+var PIXI = require('pixi');
+var stage = require('./stage');
+var async = require('async');
 var domready = require('domready');
 
 domready(function () {
-    // create an new instance of a pixi stage
-    var stage = new PIXI.Stage(0x66FF99);
 
     // create a renderer instance
-    var renderer = new PIXI.WebGLRenderer(600, 600);//autoDetectRenderer(400, 300);
+    var renderer = new PIXI.WebGLRenderer(600, 600, null, false, true);//autoDetectRenderer(400, 300);
 
     // add the renderer view element to the DOM
     document.body.appendChild(renderer.view);
@@ -43,17 +43,30 @@ domready(function () {
     var adjacencyList = new AdjacencyList(graphics, grid);
 
     function makeNodes() {
-        var n1 = new Node();
-        adjacencyList.addNode(1, n1);
+        var arr = [];
+        var i = 0;
 
-        var n2 = new Node();
-        adjacencyList.addNode(2, n2);
+        while (i < 9) {
+            arr[i] = i;
+            i++;
+        }
 
-        var n3 = new Node();
-        adjacencyList.addNode(3, n3);
+        async.each(arr, function (index, callback) {
+            var node = new Node();
+            adjacencyList.addNode(index, node);
+            callback();
+        }, function (err) {
+           if (err) throw err;
+        });
 
-        n1.addConnection(n2);
-        n2.addConnection(n3);
+    //    var n2 = new Node();
+  //      adjacencyList.addNode(3, n2);
+//
+    //    var n3 = new Node();
+   //     adjacencyList.addNode(3, n3);
+
+      //  n1.addConnection(n2);
+//        n3.addConnection(n1);
 
     }
 

@@ -2,8 +2,8 @@
  * Created by arlando on 7/26/14.
  */
 'use strict';
-var async = require('../bower_components/async/lib/async');
-var _ = require('../bower_components/underscore/underscore');
+var async = require('async');
+var _ = require('underscore');
 
 //TODO write code to inject custom draw functions
 function AdjacencyList(graphics, grid) {
@@ -58,34 +58,39 @@ AdjacencyList.prototype = {
         var self = this;
         var drawList = _.clone(this.nodeList); //Do not want to mutate actual list.
 
-        _.forEach(drawList, this._removeNodeFromOtherLists, this);
-        async.series({
-            drawEdges: function (callback) {
-                async.each(drawList, self._drawEdge.bind(self), function (err) {
-                    if (err) throw err;
-                });
+        if (drawList.length > 0) {
 
-                callback(null, drawList);
-            },
-            drawNodes: function (callback) {
-                async.each(drawList, self._drawNode.bind(self), function (err) {
+            _.forEach(drawList, this._removeNodeFromOtherLists, this);
+            async.series({
+                    drawEdges: function (callback) {
+                        async.each(drawList, self._drawEdge.bind(self), function (err) {
+                            if (err) throw err;
+                        });
+
+                        callback(null, drawList);
+                    },
+                    drawNodes: function (callback) {
+                        async.each(drawList, self._drawNode.bind(self), function (err) {
+                            if (err) throw err;
+                        });
+                        callback(null, drawList)
+                    }
+                },
+                function (err) {
                     if (err) throw err;
                 });
-                callback(null, drawList)
-            }
-        },
-        function (err) {
-            if (err) throw err;
-        });
+        }
 
         this.grid.draw(this.graphics);
     },
 
     _removeNodeFromOtherLists: function (node) {
-        _.each(node.getConnections(), function (connectedNode) {
-            //remove the current node from the connect node's list of connections
-            connectedNode.removeConnection(node);
-        }, this);
+        if (node.hasConnections()) {
+            _.each(node.getConnections(), function (connectedNode) {
+                //remove the current node from the connect node's list of connections
+                connectedNode.removeConnection(node);
+            }, this);
+        }
     },
 
     //TODO BETTER PRIVATE FUNCTIONS
@@ -96,9 +101,12 @@ AdjacencyList.prototype = {
 
     //TODO BETTER PRIVATE FUNCTIONS
     _drawEdge: function (node, callback) {
-        _.each(node.getConnections(), function(connectedNode) {
-            this.drawConnection(node, connectedNode);
-        }, this);
+        if (node.hasConnections()) {
+            _.each(node.getConnections(), function(connectedNode) {
+                this.drawConnection(node, connectedNode);
+            }, this);
+        }
+
         callback();
     },
 
