@@ -21,12 +21,14 @@
     "gulp-livereload": "^2.1.0"
   },
   "dependencies": {
-    "domready": "^1.0.5"
+    "domready": "^1.0.5",
+    "simplex-noise": "^2.1.1"
   },
   "browserify-shim": {
     "pixi": "global:PIXI",
     "async": "global:async",
-    "underscore": "global:_"
+    "underscore": "global:_",
+    "dat": "global:dat"
   },
   "browserify": {
     "transform": [

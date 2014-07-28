@@ -51,6 +51,13 @@ gulp.task('scripts', function() {
             debug: (debug === 'development')
         }))
         .pipe(gulp.dest('./static/build/'));
+
+    gulp.src('./js/Particles/particles.js')
+        .pipe(browserify({
+            insertGlobals: true,
+            debug: (debug === 'development')
+        }))
+        .pipe(gulp.dest('./static/build/'));
 });
 
 /**
@@ -61,7 +68,8 @@ gulp.task('libs', function() {
     gulp.src([
             './bower_components/pixi/bin/pixi.js',
             './bower_components/async/lib/async.js',
-            './bower_components/underscore/underscore.js'
+            './bower_components/underscore/underscore.js',
+            './bower_components/dat.gui/dat.gui.js'
         ])
         .pipe(concat('libs.js'))
         .pipe(gulp.dest('./static/build'));
