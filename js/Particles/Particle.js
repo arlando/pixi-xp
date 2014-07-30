@@ -9,6 +9,7 @@ function Particle() {
     this.life = Math.floor(Math.random() * 25) + 1;
     this.lifeDecrement = 1;
     this.radius = 1;
+    this.mass = 1;
     this.px = Math.floor(Math.random() * 600);
     this.py = Math.floor(Math.random() * 600);
     this.seed = Math.random() * Math.random();
@@ -62,6 +63,21 @@ Particle.prototype = {
         return this;
     },
 
+    applyForce: function (fx, fy) {
+        if (this.mass >= 0) throw new Error('mass cannot be zero');
+        this.ax += fx / this.mass;
+        this.ay += fy / this.mass;
+    },
+
+    /**
+     * Is the particle in the bounds of the container
+     * //TODO
+     */
+    checkBounds: function () {
+
+    },
+
+    //draws the function via dependency injection
     draw: function(injection) {
         if (injection) {
             injection.call(this);
