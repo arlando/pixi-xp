@@ -1,21 +1,30 @@
 /**
- * Created by arlando on 7/26/14.
+ * Mixin to make an object act like a vector.
  */
+
 'use strict';
 
-function Vector(x, y) {
-    this.x = x || 0;
-    this.y = y || 0;
-}
+module.exports = {
+    applyForce: function (fx, fy) {
+        if (this.mass === 0) throw new Error("Cannot applyForce if mass is zero.");
+        fx /= this.mass;
+        fy /= this.mass;
+        this.ax += fx;
+        this.ay += fy;
+    },
 
-Vector.prototype.add = function (v, out) {
+    add: function (v, out) {
+        if (out) {
 
-};
+            out.x += v.x;
+            out.y += v.y;
 
-Vector.prototype = {
-    add: function (v) {
-        this.x += v.x;
-        this.y += v.y;
+        } else {
+
+            this.x += v.x;
+            this.y += v.y;
+
+        }
     },
 
     subtract: function (v, out) {
@@ -46,12 +55,16 @@ Vector.prototype = {
         }
     },
 
-    length: function () {
+    length: function (x, y) {
+        if (x && y) {
+            return Math.sqrt((x * x) + (y * y));
+        }
         return Math.sqrt((this.x * this.x) + (this.y * this.y));
     },
 
     normalize: function(out) {
         var len;
+
         if (out) {
 
             len = 1 / out.length();
@@ -67,5 +80,3 @@ Vector.prototype = {
         }
     }
 };
-
-module.exports = Vector;

@@ -1,5 +1,8 @@
 /**
  * Created by arlando on 7/27/14.
+ * Think about mutating this with noise functions that
+ * augment the output of the function via noise values. Think
+ * of a function that can be noisly manipulated in O(1) time.
  */
 'use strict';
 var _graphics;
@@ -9,6 +12,7 @@ var _circleTexture;
 var _circleSpriteFromImage;
 var _sprite;
 var rot = 0;
+
 function Settings(){
     this.blendMode = PIXI.blendModes.ADD
     this.rot = 0;
@@ -38,11 +42,11 @@ module.exports.circle = function (texture) {
     //graphics.drawCircle(this.px, this.py, this.radius);
     //graphics.endFill();
     //var circleSprite = new _spriteFromImage(_circleTexture);
-    var circleSprite = new _sprite.fromImage('img/FFFFFF.png');
-    circleSprite.alpha = .5;
-    circleSprite.height = Math.random() * 200 + 1;
-    circleSprite.width = Math.random() *  1 + 1;
-    settings.rot += .00001;
+    var circleSprite = new _sprite.fromImage('img/FFFFFF.png'); //consider reuse
+    circleSprite.alpha = 1;
+    circleSprite.height = Math.random() + .4;
+    circleSprite.width = Math.random() + .8;
+    settings.rot += .0001;
     circleSprite.rotation = settings.rot;
     circleSprite.blendMode = settings.blendMode;
     circleSprite.tint = 0xFF69B4;
@@ -50,6 +54,15 @@ module.exports.circle = function (texture) {
     circleSprite.anchor.y = 0.5;
     circleSprite.position.x = this.px;
     circleSprite.position.y = this.py;
+    this.setSprite(circleSprite);
+    _stage.addChild(circleSprite);
+};
+
+module.exports.concept = function () {
+    var circleSprite = new _sprite.fromImage('img/FFFFFF.png');
+    circleSprite.alpha = 1;
+    circleSprite.height = 2;
+    circleSprite.width = 2;
     this.setSprite(circleSprite);
     _stage.addChild(circleSprite);
 };

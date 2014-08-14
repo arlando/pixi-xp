@@ -13,6 +13,7 @@ var dat = require('dat');
 var ParticleSystem = require('./ParticleSystem');
 var drawStyles = require('./DrawStyles');
 var updateFunctions = require('./UpdateFunctions');
+var curries = require('./Curries');
 var stage;
 var particleSystem;
 var renderer;
@@ -57,13 +58,14 @@ domready(function () {
         initialize(value)
     });
     particleSystem.addParticles(particleSystem.size, Particle);
+    curries.setF(updateFunctions.walker);
 
     function animate() {
         requestAnimFrame( animate );
         //graphics.clear();
         particleSystem
             .replenishParticles(Particle)
-            .update(updateFunctions.walker)
+            .update(curries.applicator)
             .draw(drawStyles.circle)
             .removeDeadParticles(spriteBatch);
         spriteBatch.alpha = 50;

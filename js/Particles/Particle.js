@@ -4,13 +4,15 @@
  */
 'use strict';
 var id = 0;
+var VectorMixin = require('./VectorMixin');
+var _ = require('underscore');
 
 function Particle() {
     this.life = Math.floor(Math.random() * 25) + 1;
     this.lifeDecrement = 1;
     this.radius = 1;
     this.mass = 1;
-    this.px = Math.floor(Math.random() * 600);
+    this.px = Math.floor(Math.random() * 45);
     this.py = Math.floor(Math.random() * 600);
     this.seed = Math.random() * Math.random();
     this.vx = 0;
@@ -22,6 +24,10 @@ function Particle() {
 }
 
 Particle.prototype = {
+    getMass: function () {
+        return this.mass;
+    },
+
     isAlive: function () {
         return this.life > 0;
     },
@@ -63,12 +69,6 @@ Particle.prototype = {
         return this;
     },
 
-    applyForce: function (fx, fy) {
-        if (this.mass >= 0) throw new Error('mass cannot be zero');
-        this.ax += fx / this.mass;
-        this.ay += fy / this.mass;
-    },
-
     /**
      * Is the particle in the bounds of the container
      * //TODO
@@ -85,5 +85,8 @@ Particle.prototype = {
         return this;
     }
 };
+
+//mix it up!
+_.extend(Particle.prototype, VectorMixin);
 
 module.exports = Particle;
