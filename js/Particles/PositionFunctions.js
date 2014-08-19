@@ -4,8 +4,9 @@
 'use strict';
 //TODO consider exposing objects dat.gui can manipulate which will effect vars
 var noise = require('simplex-noise');
+var GRAVITY = require('./NEWTON_CONSTANTS').GRAVITY_CONSTANT;
 
-module.exports.walker = function () {
+module.exports.walker = function (cb) {
     this.vx += .1;
     this.vy += .001;
     this.px += this.vx + Math.random() * 3;
@@ -17,4 +18,15 @@ module.exports.walker = function () {
     }
 
     this.life -= this.lifeDecrement;
+    if (cb) {
+        cb();
+    }
 };
+
+module.exports.gravity = function (cb) {
+    this.vy += GRAVITY;
+
+    if (cb) {
+        cb();
+    }
+}
