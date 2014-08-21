@@ -10,22 +10,20 @@ var _stage;
 var _sprite;
 var _circleTexture;
 var _circleSpriteFromImage;
-var _sprite;
 var rot = 0;
 
 function Settings(){
     this.blendMode = PIXI.blendModes.ADD
     this.rot = 0;
-};
-
+}
 var settings = new Settings();
+module.exports.settings = settings;
 
 module.exports.init = function(stage, sprite) {
     _stage = stage;
     _sprite = sprite;
 };
 
-module.exports.settings = settings;
 
 module.exports.setCircleSpriteFromImage = function (sprite) {
     _circleSpriteFromImage = sprite;
@@ -35,6 +33,8 @@ module.exports.setCircleTexture = function (texture) {
     _circleTexture = texture;
 };
 
+//TODO consider decoupling this
+
 module.exports.circle = function (texture) {
 
     //graphics = new _graphics();
@@ -42,18 +42,16 @@ module.exports.circle = function (texture) {
     //graphics.drawCircle(this.px, this.py, this.radius);
     //graphics.endFill();
     //var circleSprite = new _spriteFromImage(_circleTexture);
-    var circleSprite = new _sprite.fromImage('img/FFFFFF.png'); //consider reuse
-    circleSprite.alpha = 1;
-    circleSprite.height = Math.random() + .4;
-    circleSprite.width = Math.random() + .8;
+    var circleSprite = new _sprite.fromImage('img/FFFFFF.png');
+    circleSprite.alpha = .8;
+    circleSprite.height = Math.random() + 2;
+    circleSprite.width = Math.random() + 2;
     settings.rot += .0001;
     circleSprite.rotation = settings.rot;
     circleSprite.blendMode = settings.blendMode;
     circleSprite.tint = 0xFF69B4;
     circleSprite.anchor.x = 0.5;
     circleSprite.anchor.y = 0.5;
-    circleSprite.position.x = this.px;
-    circleSprite.position.y = this.py;
     this.setSprite(circleSprite);
     _stage.addChild(circleSprite);
 };

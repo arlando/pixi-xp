@@ -1,2 +1,5 @@
-module.exports.WIDTH = 600;
-module.exports.HEIGHT = 600;
+module.exports = {
+    WIDTH: 600,
+    HEIGHT: 600,
+    SIZE: 100
+};

@@ -3,8 +3,8 @@
  */
 'use strict';
 
-module.exports = Object.freeze({
-    GRAVITY_CONSTANT: 0.01,
+module.exports = {
+    GRAVITY_CONSTANT: .1,
     COEFFICIENT_FRICTION: 0.01,
     NORMAL_FRICTION: 1, //Normal Force
     GRAVITATIONAL_CONSTANT: 0.4,
@@ -12,4 +12,4 @@ module.exports = Object.freeze({
         x: 5,
         y: 25
     }
-});
+};

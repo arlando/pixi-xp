@@ -3,16 +3,35 @@
  */
 'use strict';
 
-var currF;
-module.exports.wobble = function () {
-
+var functionSet = [];
+var applicatorFunction = function (funct, index) {
+    //if (Math.random()*30 % 2) {
+        funct.call(this);
+    //}
 };
 
-module.exports.setF = function (f) {
-    currF = f;
-}
+module.exports.addToSet = function (f) {
+    if (f instanceof Array) {
+        functionSet = functionSet.concat(f);
+    } else {
+        functionSet.push(f);
+    }
+};
+
+module.exports.removeFromSet = function (f) {
+    var index = functionSet.indexOf(f);
+    if (index > -1) {
+        functionSet.splice(index, 1);
+    }
+};
 
 module.exports.applicator = function () {
-    currF.call(this);
-    this.px *= -1;
-}
+    functionSet.forEach(function (funct, index) {
+        if (applicatorFunction) {
+            applicatorFunction.call(this, funct, index);
+        } else {
+            funct.call(this);
+        }
+    }, this);
+};
+
