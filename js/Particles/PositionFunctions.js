@@ -10,7 +10,7 @@ var GRAVITY = require('./NEWTON_CONSTANTS').GRAVITY_CONSTANT;
 var SETTINGS = require('./SETTINGS');
 
 //mainly for walking
-var wx = 0; //globals produce more of a chain like ffect
+var wx = 0; //globals produce more of a chain like effect
 var wy = Math.random() * 1000; //...
 var wx = Math.random() * 1000; //...
 var SimplexNoise = require('simplex-noise');
@@ -28,8 +28,8 @@ module.exports.walker = function (cb) {
     var n2dy = simplex.noise2D(0, this.wy);
     this.px = map(n2dx, 0, 1, 0, SETTINGS.WIDTH);
     this.py = map(n2dy, 0, 1, 0, SETTINGS.HEIGHT);
-    this.wx += .0001;
-    this.wy += .005;
+    this.wx += .0008;
+    this.wy += .0008;
     this.life -= this.lifeDecrement;
     this.updateSprite();
     if (cb) {

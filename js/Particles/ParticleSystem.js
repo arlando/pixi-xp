@@ -59,7 +59,6 @@ ParticleSystem.prototype = {
     //todo clean this up!
     addOrRemoveParticles: function(i, Particle, spriteBatch) {
         if (i < this.particles.length) {
-            console.log(this.particles.length);
             var particlesToRemove = this.particles.splice(0, i);
             if (this.mode === mode.sprites) {
                 async.each(particlesToRemove, function(particle) {
@@ -73,13 +72,16 @@ ParticleSystem.prototype = {
 
     replenishParticles: function (Particle, spriteBatch) {
         if (this.repopulate) {
-            while(this.particles.length < this.getSize()) {
-                //not very performant
-                this.particles.push(new Particle())
+            var size = this.particles.length;
+            while(size < this.getSize()) {
+                //not very performant...
+                this.particles.push(new Particle());
+                size++;
             }
-            if (this.particles.length > this.getSize()) {
-                var numberOfParticlesToRemove = this.particles.length - this.size;
+            if (size > this.getSize()) {
+                var numberOfParticlesToRemove = size - this.size;
                 this.removeParticles(spriteBatch, numberOfParticlesToRemove);
+                size--;
             }
         }
         return this;
@@ -95,28 +97,31 @@ ParticleSystem.prototype = {
     },
 
     updateParticles: function(injection) {
-        async.each(this.particles, function(particle, callback) {
-            particle.update(injection);
-            callback();
-        }, function (err) {
-            if (err) throw err;
-        })
+        var len = this.particles.length;
+
+        for (var i = len - 1; i >= 0; i--) {
+            this.particles[i].update(injection);
+        }
+
     },
 
     resetOrRemoveParticles: function (stage) {
-    if (this.removeDeadParticlesFromSystem) {
-        this.removeDeadParticles(stage);
-    } else if (this.repositionDeadParticlesInSystem) {
-        this.repositionParticles();
-    }
 
-    return this;
+        if (this.removeDeadParticlesFromSystem) {
+            this.removeDeadParticles(stage);
+        } else if (this.repositionDeadParticlesInSystem) {
+            this.repositionParticles();
+        }
+
+        return this;
     },
 
     removeParticles: function (stage, numberOfParticlesToRemove)  {
         var removed = 0;
+        var size = this.particles.length;
+
         while (removed < numberOfParticlesToRemove) {
-            if (removed + 1 > this.particles.length) break; //case where we want to remove more than we can
+            if (removed + 1 > size) break; //case where we want to remove more than we can
             this.particles[removed].life = -1;
             removed++;
         }
@@ -139,10 +144,11 @@ ParticleSystem.prototype = {
     },
 
     repositionParticles: function() {
-        async.each(this.particles, function(particle) {
-            var isAlive = particle.isAlive();
-            if (!isAlive) particle.reset();
-        });
+        var len = this.particles.length;
+        for (var i = len - 1; i >= 0; i--) {
+            var particle = this.particles[i];
+            if (!particle.isAlive()) particle.reset();
+        }
     },
 
     draw: function (injection) {
@@ -152,14 +158,13 @@ ParticleSystem.prototype = {
 
     drawParticles: function (injection) {
         var self = this;
-        async.each(this.particles, function(particle, callback) {
+        var len = this.particles.length;
+        for (var i = len - 1; i >= 0; i--) {
+            var particle = this.particles[i];
             if (self.mode === mode.sprites && !particle.hasSprite()) {
                 particle.draw(injection);
             }
-            callback();
-        }, function (err) {
-            if (err) throw err;
-        });
+        }
     }
 
 };

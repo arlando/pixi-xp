@@ -21,12 +21,9 @@ var renderer;
 var gui;
 var graphics;
 var spriteBatch;
-var particleTexture;
 
 //Controllers
-var gravityController;
 var numberOfParticlesController;
-var guiUpdates = [];
 
 domready(function () {
 

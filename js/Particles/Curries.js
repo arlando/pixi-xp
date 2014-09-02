@@ -26,12 +26,8 @@ module.exports.removeFromSet = function (f) {
 };
 
 module.exports.applicator = function () {
-    functionSet.forEach(function (funct, index) {
-        if (applicatorFunction) {
-            applicatorFunction.call(this, funct, index);
-        } else {
-            funct.call(this);
-        }
-    }, this);
+    for(var i = 0, len = functionSet.length; i < len; i++) {
+        applicatorFunction.call(this, functionSet[i], i)
+    }
 };
 
