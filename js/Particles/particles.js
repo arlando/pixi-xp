@@ -3,6 +3,10 @@
  */
 /**
  * Particle experiments
+ * - How many particles can we get rendered?
+ * - How not to block the UI thread (50ms max execution time)?
+ * - How can we expose properties to dynamically change the system?
+ * - How can we keep particles independent of one another?
  */
 
 'use strict';

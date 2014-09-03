@@ -1,3 +1,3 @@
-/**
- * Created by arlando on 8/17/14.
+/*
+This file mutates color options (alpha, tinting, HEX, RGB) on objects.
  */

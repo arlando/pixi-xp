@@ -15,7 +15,7 @@ var wy = Math.random() * 1000; //...
 var wx = Math.random() * 1000; //...
 var SimplexNoise = require('simplex-noise');
 var outerScope = this;
-var simplex = new SimplexNoise(); //expensive as PHUQ
+var simplex = new SimplexNoise(); //expensive
 
 module.exports.walker = function (cb) {
     if (!this.wx) {

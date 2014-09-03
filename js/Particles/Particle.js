@@ -1,8 +1,5 @@
-
-/**
- * Created by arlando on 7/27/14.
- */
 'use strict';
+
 var id = 0;
 var VectorMixin = require('./VectorMixin');
 var _ = require('underscore');
