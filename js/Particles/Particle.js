@@ -6,7 +6,8 @@ var _ = require('underscore');
 var SETTINGS = require('./SETTINGS');
 
 function Particle() {
-    this.life = Math.floor(Math.random() * 25) + 1;
+    //this.life = Math.floor(Math.random() * 25) + 1;
+    this.life = 100; //changes how often the particle seems ot jitter from location to next
     this.lifeDecrement = 1;
     this.radius = 1;
     this.mass = 1;
@@ -26,7 +27,8 @@ Particle.prototype = {
         //to make trailing effect
         this.px = Math.floor(Math.random() * SETTINGS.WIDTH);
         this.py = Math.floor(Math.random() * SETTINGS.HEIGHT);
-        this.life = Math.floor(Math.random() * 25) + 1;
+        //this.life = Math.floor(Math.random() * 25) + 1;
+        this.life = 100; //changes how often the particle seems to jitter from one location to the next
         this.seed = Math.random() * Math.random();
         this.vx = 0;
         this.vy = 0;

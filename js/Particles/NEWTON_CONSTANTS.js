@@ -4,7 +4,7 @@
 'use strict';
 
 module.exports = {
-    GRAVITY_CONSTANT: .1,
+    GRAVITY_CONSTANT: .05,
     COEFFICIENT_FRICTION: 0.01,
     NORMAL_FRICTION: 1, //Normal Force
     GRAVITATIONAL_CONSTANT: 0.4,

@@ -31,6 +31,7 @@ module.exports.walker = function (cb) {
     this.wx += .0008;
     this.wy += .0008;
     this.life -= this.lifeDecrement;
+
     this.updateSprite();
     if (cb) {
         cb.call(this);
@@ -54,13 +55,14 @@ module.exports.globalWalker = function (cb) {
 }
 
 module.exports.basic = function (cb) {
-    this.vx += .2;
-    this.vy += 0;
+    this.vx += 0;
+    this.vy += .05;
     this.px += this.vx;
     this.py += this.vy;
     this.life -= this.lifeDecrement;
-    this.life -= this.lifeDecrement;
 
+
+    this.updateSprite();
     if (cb) {
         cb.call(this);
     }
@@ -69,7 +71,7 @@ module.exports.basic = function (cb) {
 
 module.exports.gravity = function (cb) {
     this.vy += GRAVITY;
-
+    this.updateSprite();
     if (cb) {
         cb.call(this);
     }

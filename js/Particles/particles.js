@@ -63,12 +63,13 @@ domready(function () {
     particleSystem.addParticles(particleSystem.size, Particle);
     //todo move this setup somewhere else
     //curries.addToSet(updateFunctions.gravity);
-    curries.addToSet(updateFunctions.walker);
-    //curries.addToSet(updateFunctions.basic);
+    //curries.addToSet(updateFunctions.walker);
+    curries.addToSet(updateFunctions.basic);
 
     function animate() {
         requestAnimFrame( animate );
 
+        //TODO: Consider exposing particles so you can use Duff's Device
         particleSystem
             .replenishParticles(Particle, spriteBatch)
             .update(curries.applicator)

@@ -143,7 +143,12 @@ ParticleSystem.prototype = {
     repositionParticles: function() {
         for (var i = this.particles.length; i--;) {
             var particle = this.particles[i];
-            if (!particle.isAlive()) particle.reset();
+            //alive strategy good for creating a pulsating, harmonious effect if the particle is always reset with the same life and death time...
+            //however if any randomness is involved in the life the particles will look like a more disjoint group
+            //if (!particle.isAlive()) particle.reset();
+
+            //bounding strategy
+            if (!particle.inBounds()) particle.reset();
         }
     },
 
@@ -164,5 +169,7 @@ ParticleSystem.prototype = {
     }
 
 };
+
+
 
 module.exports = ParticleSystem;
