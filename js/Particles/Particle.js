@@ -91,7 +91,9 @@ Particle.prototype = {
      * //TODO
      */
     inBounds: function () {
-        return x < 0 || x > SETTINGS.WIDTH || y < 0 || y > SETTINGS.HEIGHT;
+        var x = this.px;
+        var y = this.py;
+        return (x >= 0 && x < SETTINGS.WIDTH) && (y >= 0 && y <= SETTINGS.HEIGHT);
     },
 
     //draws the function via dependency injection
