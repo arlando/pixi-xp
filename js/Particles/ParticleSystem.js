@@ -158,8 +158,8 @@ ParticleSystem.prototype = {
 
     drawParticles: function (injection) {
         var self = this;
-        var len = this.particles.length;
-        for (var i = len - 1; i >= 0; i--) {
+
+        for (var i = this.particles.length; i--;) {
             var particle = this.particles[i];
             if (self.mode === mode.sprites && !particle.hasSprite()) {
                 particle.draw(injection);
