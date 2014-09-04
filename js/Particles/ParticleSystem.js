@@ -97,12 +97,9 @@ ParticleSystem.prototype = {
     },
 
     updateParticles: function(injection) {
-        var len = this.particles.length;
-
-        for (var i = len - 1; i >= 0; i--) {
+        for (var i = this.particles.length; i--;) {
             this.particles[i].update(injection);
         }
-
     },
 
     resetOrRemoveParticles: function (stage) {
@@ -144,8 +141,7 @@ ParticleSystem.prototype = {
     },
 
     repositionParticles: function() {
-        var len = this.particles.length;
-        for (var i = len - 1; i >= 0; i--) {
+        for (var i = this.particles.length; i--;) {
             var particle = this.particles[i];
             if (!particle.isAlive()) particle.reset();
         }
