@@ -62,6 +62,10 @@ module.exports = {
         return Math.sqrt((this.x * this.x) + (this.y * this.y));
     },
 
+    lengthSq: function () {
+        return this.x * this.x + this.y * this.y;
+    },
+
     normalize: function(out) {
         var len;
 
@@ -78,5 +82,27 @@ module.exports = {
             this.y *= len;
 
         }
+    },
+
+    getDirection : function(vx, vy) {
+        return Math.atan2(vx, -vy) * (180 / Math.PI);
+    },
+
+    /**
+     * v is something that has a vector mixin
+     * @param v
+     * @returns {*}
+     */
+    dot: function (v) {
+        return this.x * v.x + this.y + v.y;
+    },
+
+    /**
+     * v is something that has a vector mixin
+     * @param v
+     */
+    distanceTo: function (v) {
+
     }
+
 };
