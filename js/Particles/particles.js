@@ -17,6 +17,7 @@ var dat = require('dat');
 var ParticleSystem = require('./ParticleSystem');
 var drawStyles = require('./DrawStyles');
 var updateFunctions = require('./PositionFunctions');
+var boundingStrategies = require('./BoundingStrategies');
 var curries = require('./Curries');
 var SETTINGS = require('./SETTINGS');
 var stage;
@@ -62,9 +63,10 @@ domready(function () {
 
     particleSystem.addParticles(particleSystem.size, Particle);
     //todo move this setup somewhere else
+    curries.addToSet(boundingStrategies.bounceOffWall);
     //curries.addToSet(updateFunctions.gravity);
-    //curries.addToSet(updateFunctions.walker);
     curries.addToSet(updateFunctions.basic);
+   // curries.addToSet(updateFunctions.walker);
 
     function animate() {
         requestAnimFrame( animate );
