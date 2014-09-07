@@ -11,22 +11,27 @@ function Particle() {
     this.lifeDecrement = 1;
     this.radius = 1;
     this.mass = 1;
-    this.px = Math.floor(Math.random() * SETTINGS.WIDTH);
-    this.py = Math.floor(Math.random() * SETTINGS.HEIGHT);
+    this.px = Math.random() * SETTINGS.WIDTH;
+    this.py = Math.random() * SETTINGS.HEIGHT;
+    this.originalPx = this.px;
+    this.originalPy = this.py;
     this.seed = Math.random() * Math.random();
     this.vx = 0;
     this.vy = 0;
     this.ax = 0;
     this.ay = 0;
     this.id = id;
+    //TODO: this should be mixin if we are using a bouncing strategy
+    this.switchingVx = false;
+    this.switchingVy = false;
     id++;
 }
 
 Particle.prototype = {
     reset: function () {
-        //to make trailing effect
-        this.px = Math.floor(Math.random() * SETTINGS.WIDTH);
-        this.py = Math.floor(Math.random() * SETTINGS.HEIGHT);
+
+        this.px = this.originalPx;
+        this.py = this.originalPy;
         //this.life = Math.floor(Math.random() * 25) + 1;
         this.life = 100; //changes how often the particle seems to jitter from one location to the next
         this.seed = Math.random() * Math.random();
@@ -96,6 +101,20 @@ Particle.prototype = {
         var x = this.px;
         var y = this.py;
         return (x >= 0 && x < SETTINGS.WIDTH) && (y >= 0 && y <= SETTINGS.HEIGHT);
+    },
+
+    /**
+     * Checks if x is out of bounds
+     */
+    outOfBoundsX: function () {
+        return this.px > SETTINGS.WIDTH || this.px < 0;
+    },
+
+    /**
+     * Checks if y is out of bounds
+     */
+    outOfBoundsY: function () {
+        return this.py > SETTINGS.HEIGHT || this.py < 0;
     },
 
     //draws the function via dependency injection
