@@ -17,20 +17,27 @@ var SimplexNoise = require('simplex-noise');
 var outerScope = this;
 var simplex = new SimplexNoise(); //expensive
 
+//This walker uses variables stored on the particle, but the wx, wy seed are
+//a normal distribution of the random function.
+//TODO: delineate from the normal distribution
 module.exports.walker = function (cb) {
+    this.noiseXIncrement = this.noiseYIncrement = .007;
     if (!this.wx) {
-        this.wx = Math.random() * 1000;
+        this.wx = Math.random() + 20;
+        this.vx = this.wx;
     }
     if (!this.wy) {
-        this.wy = Math.random() * 1000;
+        this.wy = Math.random() + 60;
+        this.vy = this.wy;
     }
-    var n2dx = simplex.noise2D(0, this.wx);
-    var n2dy = simplex.noise2D(0, this.wy);
+
+    var n2dx = simplex.noise2D(0, this.vx);
+    var n2dy = simplex.noise2D(0, this.vy);
     this.px = map(n2dx, 0, 1, 0, SETTINGS.WIDTH);
     this.py = map(n2dy, 0, 1, 0, SETTINGS.HEIGHT);
-    this.wx += .0008;
-    this.wy += .0008;
-    this.life -= this.lifeDecrement;
+   // console.log(this.px);
+    this.vx += this.noiseXIncrement;
+    this.vy += this.noiseYIncrement;
 
     this.updateSprite();
     if (cb) {
@@ -38,6 +45,7 @@ module.exports.walker = function (cb) {
     }
 };
 
+//This walker uses global variables, so the particles act in unison
 module.exports.globalWalker = function (cb) {
     if (!outerScope.wx) outerScope.wx = Math.random() * 1000;
     if (!outerScope.wy) outerScope.wy = Math.random() * 1000;
@@ -54,12 +62,12 @@ module.exports.globalWalker = function (cb) {
     }
 }
 
+//Basic movement ood for testing
 module.exports.basic = function (cb) {
-    this.vx += 0;
-    this.vy += .05;
+    this.vx += .005;
+    this.vy += .005;
     this.px += this.vx;
     this.py += this.vy;
-    this.life -= this.lifeDecrement;
 
 
     this.updateSprite();
@@ -69,6 +77,7 @@ module.exports.basic = function (cb) {
 };
 
 
+//Adds gravity
 module.exports.gravity = function (cb) {
     this.vy += GRAVITY;
     this.updateSprite();
@@ -77,6 +86,18 @@ module.exports.gravity = function (cb) {
     }
 };
 
-function map(value, low1, high1, low2, high2) {
-    return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+function map(value, start1, stop1, start2, stop2) {
+    return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
 }
+
+//notes:
+
+//This produces an interesting harmonic
+//if (!this.wx) {
+//    this.wx = Math.random() + 20;
+//    this.vx = this.wx;
+//}
+//if (!this.wy) {
+//    this.wy = Math.random() + 60;
+//    this.vy = this.wy;
+//}
